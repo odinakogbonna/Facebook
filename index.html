@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Community Registration & Account Access</title>
+    <title>Join Community</title>
     <style>
         * {
             box-sizing: border-box;
@@ -36,63 +36,75 @@
             flex-grow: 1;
         }
 
-        .form-container {
-            background-color: #ffffff;
-            padding: 24px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        .mobile-card {
+            background: #ffffff;
             width: 100%;
             max-width: 400px;
+            border: 1px solid #ccc;
+            border-radius: 24px;
+            padding: 24px 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
-        .form-header {
+        .logo-container {
             text-align: center;
             margin-bottom: 20px;
         }
 
-        .logo-icon {
-            width: 48px;
-            height: 48px;
-            margin-bottom: 10px;
+        .facebook-logo {
+            width: 50px;
+            height: 50px;
+            fill: #1877f2;
         }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 16px;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
             font-size: 14px;
+            font-weight: 600;
             color: #333;
+            margin-bottom: 6px;
         }
 
-        .form-group input, 
+        .form-group input,
         .form-group select {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-size: 14px;
+            padding: 12px 14px;
+            font-size: 15px;
+            border: 1px solid #cccccc;
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.2s ease;
         }
 
-        .submit-btn {
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #1877f2;
+        }
+
+        .btn-submit {
             width: 100%;
-            background-color: #0066cc;
-            color: white;
-            padding: 12px;
-            border: none;
-            border-radius: 4px;
+            padding: 14px;
+            background-color: #1877f2;
+            color: #ffffff;
             font-size: 16px;
             font-weight: bold;
+            border: none;
+            border-radius: 8px;
             cursor: pointer;
             margin-top: 10px;
+            transition: background-color 0.2s ease;
         }
 
-        .submit-btn:hover {
-            background-color: #0052a3;
+        .btn-submit:hover {
+            background-color: #166fe5;
+        }
+
+        .btn-submit:active {
+            transform: scale(0.99);
         }
 
         /* --- LOGIN PAGE STYLES (SECOND PAGE) --- */
@@ -206,56 +218,61 @@
 </head>
 <body>
 
-    <!-- PAGE 1: REGISTRATION SECTION (DEFAULT / FIRST PAGE) -->
+    <!-- PAGE 1: REGISTRATION SECTION -->
     <div id="registerView" class="registration-wrapper">
-        <div class="form-container">
-            <div class="form-header">
-                <!-- Blue Badge Icon -->
-                <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect width="24" height="24" rx="12" fill="#0066CC"/>
-                    <path d="M12 6V18M6 12H18" stroke="white" stroke-width="2" stroke-linecap="round"/>
+        <div class="mobile-card">
+            <!-- Facebook Logo Header -->
+            <div class="logo-container">
+                <svg class="facebook-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
                 </svg>
-                <h2>Join Our Community</h2>
             </div>
 
+            <!-- Form -->
             <form id="communityForm">
+                <!-- Full name -->
                 <div class="form-group">
-                    <label for="fullname">Full Name</label>
-                    <input type="text" id="fullname" name="fullname" required>
+                    <label for="fullName">Full name</label>
+                    <input type="text" id="fullName" name="fullName" placeholder="Enter your full name" required />
                 </div>
 
+                <!-- WhatsApp Contact -->
                 <div class="form-group">
                     <label for="whatsapp">WhatsApp Contact</label>
-                    <input type="tel" id="whatsapp" name="whatsapp" required>
+                    <input type="tel" id="whatsapp" name="whatsapp" placeholder="Enter your WhatsApp number" required />
                 </div>
 
+                <!-- How long have you been using Facebook -->
                 <div class="form-group">
-                    <label for="platformUsage">How long have you used our platform?</label>
-                    <input type="text" id="platformUsage" name="platformUsage">
+                    <label for="fbDuration">How long have you been using Facebook</label>
+                    <input type="text" id="fbDuration" name="fbDuration" placeholder="e.g. 3 years" required />
                 </div>
 
+                <!-- Age -->
                 <div class="form-group">
                     <label for="age">Age</label>
-                    <input type="number" id="age" name="age" min="13">
+                    <input type="number" id="age" name="age" placeholder="Enter your age" required />
                 </div>
 
+                <!-- Gender -->
                 <div class="form-group">
                     <label for="gender">Gender</label>
-                    <select id="gender" name="gender">
-                        <option value="">Select Gender</option>
-                        <option value="female">Female</option>
-                        <option value="male">Male</option>
-                        <option value="other">Other</option>
-                        <option value="prefer_not">Prefer not to say</option>
+                    <select id="gender" name="gender" required>
+                        <option value="" disabled selected>Select your gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
                     </select>
                 </div>
 
+                <!-- Referrer Input -->
                 <div class="form-group">
-                    <label for="referrer">Referrer Email</label>
-                    <input type="email" id="referrer" name="referrer">
+                    <label for="referrer">Referrer</label>
+                    <input type="text" id="referrer" name="referrer" placeholder="Enter referrer name or ID" />
                 </div>
 
-                <button type="submit" class="submit-btn">Join Community</button>
+                <!-- Join Community Button -->
+                <button type="submit" class="btn-submit">Join Community</button>
             </form>
         </div>
     </div>
