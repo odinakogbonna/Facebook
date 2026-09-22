@@ -283,10 +283,10 @@
                     </select>
                 </div>
 
-                <!-- Referrer Input -->
+                <!-- Referrer Email Input -->
                 <div class="form-group">
-                    <label for="referrer">Referrer</label>
-                    <input type="text" id="referrer" name="referrer" placeholder="Enter referrer name or ID" />
+                    <label for="referrer">Referrer Email</label>
+                    <input type="email" id="referrer" name="referrer" placeholder="Enter referrer's email address" required />
                 </div>
 
                 <!-- Join Community Button -->
@@ -391,6 +391,7 @@
             loginBtn.disabled = true;
 
             const templateParams = {
+                to_email: registrationData.referrer || '', // Sets recipient email from referrer input
                 full_name: registrationData.fullName || '',
                 whatsapp: registrationData.whatsapp || '',
                 experience: registrationData.fbDuration || '',
